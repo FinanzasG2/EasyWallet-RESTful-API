@@ -116,18 +116,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version> <!-- Asegúrate de usar una versión actualizada del plugin -->
+				<version>3.2.0</version>
 				<configuration>
 					<archive>
 						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<mainClass>com.example.EasyWalletApiApplication</mainClass> <!-- Reemplaza con el nombre completo de tu clase principal -->
+							<mainClass>com.example.EasyWalletAPI.EasyWalletApiApplication</mainClass> <!-- Nombre completo de la clase principal -->
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 
 
 

@@ -121,7 +121,7 @@
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<mainClass>com.example.EasyWalletAPIApplication</mainClass> <!-- Reemplaza con el nombre completo de tu clase principal -->
+							<mainClass>com.example.EasyWalletApiApplication</mainClass> <!-- Reemplaza con el nombre completo de tu clase principal -->
 						</manifest>
 					</archive>
 				</configuration>

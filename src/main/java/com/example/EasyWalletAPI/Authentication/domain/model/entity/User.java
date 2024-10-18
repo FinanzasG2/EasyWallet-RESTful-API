@@ -1,5 +1,6 @@
 package com.example.EasyWalletAPI.Authentication.domain.model.entity;
 
+import com.example.EasyWalletAPI.Managment.domain.model.entity.Letter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -60,5 +61,9 @@ public class User implements UserDetails, CredentialsContainer {
     @Override
     public void eraseCredentials() {
     }
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Letter> letters;
 
 }

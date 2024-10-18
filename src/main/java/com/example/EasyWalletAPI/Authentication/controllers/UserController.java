@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
 
-@Tag(name = "User", description = "User edit, delete, and view user information")
+@Tag(name = "User", description = "User delete and view user information")
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor

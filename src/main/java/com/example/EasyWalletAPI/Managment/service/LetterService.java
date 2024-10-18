@@ -11,6 +11,7 @@ import com.example.EasyWalletAPI.Managment.domain.model.entity.*;
 import com.example.EasyWalletAPI.Managment.domain.persistence.CostoAdicionalRepository;
 import com.example.EasyWalletAPI.Managment.domain.persistence.LetterRepository;
 import com.example.EasyWalletAPI.Managment.domain.persistence.TasaRepository;
+import com.example.EasyWalletAPI.TCEA.service.TCEAService;
 import com.example.EasyWalletAPI.shared.exception.GlobalExceptionHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,8 @@ public class LetterService {
     private TasaService tasaService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TCEAService tceaService;
 
     public LetterResponse createLetter(LetterRequest letterRequest) {
         Letter letter = new Letter();
@@ -56,7 +59,8 @@ public class LetterService {
         // Manejo de la tasa
         Tasa tasa = createAndConvertTasa(letterRequest, letter);
 
-
+        // Calcular TCEA
+        tceaService.calculateTCEA(letter, tasa.getValor());
 
         return mapToResponse(letter, tasa);
     }
@@ -72,9 +76,10 @@ public class LetterService {
         letter.setFechaVencimiento(letterRequest.getFechaVencimiento());
         letter.setFechaDescuento(letterRequest.getFechaDescuento());
 
-        // Eliminar tasas y costos adicionales anteriores
+        // Eliminar tasas, costos adicionales anteriores y TCEA
         tasaRepository.deleteAllByLetter(letter);
         costoAdicionalRepository.deleteAllByLetter(letter);
+        tceaService.deleteTCEA(letter);
 
         // Asegurarse de que se apliquen las eliminaciones antes de las inserciones
         letterRepository.flush();  // Sincroniza con la base de datos
@@ -83,8 +88,10 @@ public class LetterService {
         Tasa tasa = createAndConvertTasa(letterRequest, letter);
         saveCostosAdicionales(letterRequest.getCostosAdicionales(), letter);
 
-        // Guardar la carta actualizada
+        // Guardar la letra actualizada
         letter = letterRepository.save(letter);
+
+        tceaService.calculateTCEA(letter, tasa.getValor());
 
         return mapToResponse(letter, tasa);
     }
@@ -110,6 +117,7 @@ public class LetterService {
         // Eliminar los costos adicionales asociados
         costoAdicionalRepository.deleteAllByLetter(letter);
         tasaRepository.deleteAllByLetter(letter);
+        tceaService.deleteTCEA(letter);
 
 
         // Eliminar la letra
@@ -136,7 +144,7 @@ public class LetterService {
 
     private List<CostoAdicional> saveCostosAdicionales(List<CostoAdicionalRequest> costoAdicionalRequests, Letter letter) {
         List<CostoAdicional> costos = costoAdicionalRequests.stream()
-                .map(request -> new CostoAdicional(null, letter, request.getDescripcion(), request.getMonto()))
+                .map(request -> new CostoAdicional(null, letter, request.getDescripcion(), request.getMonto(), request.getTiempo()))
                 .collect(Collectors.toList());
         return costoAdicionalRepository.saveAll(costos);
     }
@@ -158,10 +166,15 @@ public class LetterService {
         response.setTasa(tasaResponse);
 
         List<CostoAdicionalResponse> costoResponses = letter.getCostosAdicionales().stream()
-                .map(costo -> new CostoAdicionalResponse(costo.getId(), costo.getDescripcion(), costo.getMonto()))
+                .map(costo -> new CostoAdicionalResponse(costo.getId(), costo.getDescripcion(), costo.getMonto(), costo.getTiempo()))
                 .collect(Collectors.toList());
         response.setCostosAdicionales(costoResponses);
 
         return response;
     }
+    public Letter findLetterById(Long id) {
+        return letterRepository.findById(id)
+                .orElseThrow(() -> new GlobalExceptionHandler("Letter", "not found with id " + id));
+    }
+
 }

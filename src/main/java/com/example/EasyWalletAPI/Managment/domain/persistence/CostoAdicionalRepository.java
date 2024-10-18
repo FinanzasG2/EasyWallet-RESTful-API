@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface CostoAdicionalRepository extends JpaRepository<CostoAdicional, Long> {
     void deleteAllByLetter(Letter letra);
-
+    List<CostoAdicional> findByLetter(Letter letter);
 }

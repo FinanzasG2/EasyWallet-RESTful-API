@@ -1,6 +1,7 @@
 package com.example.EasyWalletAPI.Managment.domain.model.entity;
 
 import com.example.EasyWalletAPI.Authentication.domain.model.entity.User;
+import com.example.EasyWalletAPI.TCEA.domain.model.entity.TCEA;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,4 +41,8 @@ public class Letter {
     @OneToMany(mappedBy = "letter", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<Tasa> tasas;
+
+    @OneToOne(mappedBy = "letter", cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private TCEA tcea;
 }

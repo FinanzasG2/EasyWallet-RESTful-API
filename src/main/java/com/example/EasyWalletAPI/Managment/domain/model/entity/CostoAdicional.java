@@ -27,4 +27,8 @@ public class CostoAdicional {
 
     private String descripcion;
     private BigDecimal monto;
+
+    @Enumerated(EnumType.STRING)
+    private Tiempo tiempo;
+
 }

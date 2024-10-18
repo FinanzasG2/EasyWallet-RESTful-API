@@ -1,6 +1,8 @@
 package com.example.EasyWalletAPI.Authentication.domain.model.entity;
 
 import com.example.EasyWalletAPI.Managment.domain.model.entity.Letter;
+import com.example.EasyWalletAPI.Reports.domain.model.entity.Report;
+import com.example.EasyWalletAPI.TCEA.domain.model.entity.TCEA;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -65,5 +67,9 @@ public class User implements UserDetails, CredentialsContainer {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Letter> letters;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private Report report;
 
 }

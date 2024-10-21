@@ -21,15 +21,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                /*
+                .authorizeRequests(authorizeRequests -> authorizeRequests
+                        .anyRequest()
+                        .permitAll()
+                        .anyRequest()
+                 */
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //.authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        if (!"dev".equals(System.getenv("ENV"))) {
-            // Force HTTPS in production, not in development
-            http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
-        }
 
         return http.build();
     }

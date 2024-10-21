@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.11.2</version> <!-- Use the version that is compatible with your other jjwt dependencies -->
+			<version>0.11.5</version> <!-- Use the version that is compatible with your other jjwt dependencies -->
 			<scope>runtime</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->

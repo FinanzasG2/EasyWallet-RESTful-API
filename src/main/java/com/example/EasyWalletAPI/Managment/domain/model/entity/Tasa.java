@@ -28,6 +28,9 @@ public class Tasa {
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
+    @Enumerated(EnumType.STRING)
+    private Frecuency frecuency;
+
     private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)

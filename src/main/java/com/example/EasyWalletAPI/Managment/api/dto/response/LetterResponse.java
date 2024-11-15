@@ -10,7 +10,9 @@ import java.util.List;
 public class LetterResponse {
     private Long id;
     private Long usuarioId;
+    private String letterNumber;
     private BigDecimal valorNominal;
+    private String currency;
     private Date fechaRegistro;
     private Date fechaVencimiento;
     private Date fechaDescuento;

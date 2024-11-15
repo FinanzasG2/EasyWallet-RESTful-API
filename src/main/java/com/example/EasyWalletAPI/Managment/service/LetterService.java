@@ -46,6 +46,8 @@ public class LetterService {
         letter.setFechaRegistro(letterRequest.getFechaRegistro());
         letter.setFechaVencimiento(letterRequest.getFechaVencimiento());
         letter.setFechaDescuento(letterRequest.getFechaDescuento());
+        letter.setCurrency(letterRequest.getCurrency());
+        letter.setLetternumber(letterRequest.getLetterNumber());
         User user = userRepository.findById(letterRequest.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -75,7 +77,8 @@ public class LetterService {
         letter.setFechaRegistro(letterRequest.getFechaRegistro());
         letter.setFechaVencimiento(letterRequest.getFechaVencimiento());
         letter.setFechaDescuento(letterRequest.getFechaDescuento());
-
+        letter.setCurrency(letterRequest.getCurrency());
+        letter.setLetternumber(letterRequest.getLetterNumber());
         // Eliminar tasas, costos adicionales anteriores y TCEA
         tasaRepository.deleteAllByLetter(letter);
         costoAdicionalRepository.deleteAllByLetter(letter);
@@ -109,6 +112,16 @@ public class LetterService {
                 .collect(Collectors.toList());
     }
 
+    public List<LetterResponse> getLettersByUserId(Long userId) {
+        User usuario = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id " + userId));
+
+        List<Letter> letters = letterRepository.findAllByUser(usuario);
+        return letters.stream()
+                .map(letter -> mapToResponse(letter, letter.getTasas().get(0)))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void deleteLetter(Long id) {
         Letter letter = letterRepository.findById(id)
@@ -129,12 +142,15 @@ public class LetterService {
         tasa.setTipo(letterRequest.getTipoTasa());
         tasa.setValor(letterRequest.getValorTasa());
         tasa.setCapitalizacion(letterRequest.getCapitalizacionTasa());
+        tasa.setFrecuency(letterRequest.getFrecuenciaTasa());
 
         if (tasa.getTipo() != Tipo.EFECTIVA || tasa.getCapitalizacion() != Capitalizacion.ANUAL) {
             BigDecimal tasaConvertida = tasaService.convertirATasaEfectivaAnual(tasa);
             tasa.setTipo(Tipo.EFECTIVA);
             tasa.setValor(tasaConvertida);
-            tasa.setCapitalizacion(Capitalizacion.ANUAL);
+            tasa.setFrecuency(Frecuency.ANUAL);
+            tasa.setCapitalizacion(null);
+
         }
 
         tasa.setLetter(letter);
@@ -157,12 +173,13 @@ public class LetterService {
         response.setFechaRegistro(letter.getFechaRegistro());
         response.setFechaVencimiento(letter.getFechaVencimiento());
         response.setFechaDescuento(letter.getFechaDescuento());
-
+        response.setCurrency(letter.getCurrency());
+        response.setLetterNumber(letter.getLetternumber());
         TasaResponse tasaResponse = new TasaResponse();
         tasaResponse.setId(tasa.getId());
         tasaResponse.setValor(tasa.getValor());
         tasaResponse.setTipo(tasa.getTipo());
-        tasaResponse.setCapitalizacion(tasa.getCapitalizacion());
+        tasaResponse.setFrecuency(tasa.getFrecuency());
         response.setTasa(tasaResponse);
 
         List<CostoAdicionalResponse> costoResponses = letter.getCostosAdicionales().stream()

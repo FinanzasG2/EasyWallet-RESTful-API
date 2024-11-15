@@ -40,6 +40,12 @@ public class LetterController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<LetterResponse>> getLettersByUserId(@PathVariable Long usuarioId) {
+        List<LetterResponse> responses = letterService.getLettersByUserId(usuarioId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
     // Método para obtener todas las letras
     @GetMapping
     public ResponseEntity<List<LetterResponse>> getAllLetters() {

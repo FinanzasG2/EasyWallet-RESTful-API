@@ -34,6 +34,9 @@ public class Letter {
     private Date fechaVencimiento;
     private Date fechaDescuento;
 
+    private String letternumber;
+    private String currency;
+
     @OneToMany(mappedBy = "letter", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<CostoAdicional> costosAdicionales = new ArrayList<>();

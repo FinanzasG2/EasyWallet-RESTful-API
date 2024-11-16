@@ -27,26 +27,10 @@ public class SecurityConfiguration  {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // Permitir acceso público a Swagger
                         .requestMatchers("/api/**").permitAll()  // Permitir acceso público a tus endpoints de API
-                        .anyRequest().authenticated()  // Requerir autenticación para otras rutas
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }
 
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                /*
-                .authorizeRequests(authorizeRequests -> authorizeRequests
-                        .anyRequest()
-                        .permitAll()
-                        .anyRequest()
-
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //.authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }*/
 
 }

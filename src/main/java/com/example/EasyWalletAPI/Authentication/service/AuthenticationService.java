@@ -43,7 +43,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(registerRequestDto.getPassword()))
                 .build();
         userRepository.save(user);
-        var jwttoken = jwtService.generateToken(user);
+        var jwttoken = jwtService.generateToken(user, user.getId());
         return AuthenticationResponseDto.builder()
                 .token(jwttoken)
                 .user(user)
@@ -64,7 +64,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(authenticationRequestDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Email or password is incorrect"));
 
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user, user.getId());
         return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .user(user)

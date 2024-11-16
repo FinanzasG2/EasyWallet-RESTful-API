@@ -19,35 +19,37 @@ public class JwtService {
 
     private static final String SECRET_KEY = "A38DC3E13E6CEF5737D4F8FD5B67E1234567890123456789012345678901234";
 
-    public String extractUsername(String token) {
+    // Cambiamos extractUsername a extractUserId para reflejar que ahora obtenemos el ID
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    private <T> T extractClaim(String token, Function<Claims,T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, Long userId) {
+        return generateToken(new HashMap<>(), userDetails, userId);
     }
 
     public String generateToken(
-            Map<String,Object> extractClaims,
-            UserDetails userDetails) {
+            Map<String, Object> extractClaims,
+            UserDetails userDetails,
+            Long userId) {
         return Jwts
                 .builder()
                 .setClaims(extractClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(String.valueOf(userId)) // El ID del usuario será el subject
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // 1 day expiration for JWT
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // Expiración: 1 día
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String userId = extractUserId(token);
+        return (userId.equals(String.valueOf(userDetails.getUsername())) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {

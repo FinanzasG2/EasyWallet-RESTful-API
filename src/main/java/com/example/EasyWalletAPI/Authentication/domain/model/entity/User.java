@@ -58,7 +58,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(username));
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
     @Override
     public void eraseCredentials() {

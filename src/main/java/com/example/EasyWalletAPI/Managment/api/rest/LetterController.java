@@ -5,12 +5,14 @@ import com.example.EasyWalletAPI.Managment.api.dto.response.LetterResponse;
 import com.example.EasyWalletAPI.Managment.service.LetterService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Letter", description = "Register, update, delete, and get letters")
 @RestController
 @RequestMapping("/api/letras")
@@ -22,6 +24,8 @@ public class LetterController {
     // Método para crear una nueva letra
     @PostMapping
     public ResponseEntity<LetterResponse> createLetter(@RequestBody LetterRequest letterRequest) {
+
+        log.info("Datos recibidos en el endpoint /api/letras: {}", letterRequest);
         LetterResponse response = letterService.createLetter(letterRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

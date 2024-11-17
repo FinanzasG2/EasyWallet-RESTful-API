@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(
-		info = @Info(title = "EasyWallet API", version = "v1")
-		/*servers = {
+		info = @Info(title = "EasyWallet API", version = "v1"),
+		servers = {
 				@Server(url = "https://easywallet-restful-api.up.railway.app", description = "Railway API Server")
-		}*/
+		}
 )
 @SpringBootApplication
 public class EasyWalletApiApplication {

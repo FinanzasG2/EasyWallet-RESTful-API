@@ -22,13 +22,16 @@ public class SecurityConfiguration  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))  // Habilitar CORS
-                .csrf(csrf -> csrf.disable())  // Deshabilitar CSRF
+                .cors() // Usa el filtro de CORS definido en CorsConfig
+                .and()
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // Permitir acceso público a Swagger
-                        .requestMatchers("/api/**").permitAll()  // Permitir acceso público a tus endpoints de API
-                        .anyRequest().permitAll()
-                );
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Permitir acceso público a Swagger
+                        .requestMatchers("/api/**").permitAll() // Permitir acceso público a tus endpoints de API
+                        .anyRequest().permitAll() // Permitir todas las demás solicitudes
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Filtro JWT
         return http.build();
     }
 
